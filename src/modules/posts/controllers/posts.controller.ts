@@ -10,50 +10,36 @@ export class PostsController {
     @Get()
     async findAll() {
         // get all posts in the db
-        return await this.postService.findAll();
-    }
-
-    @Get(':id')
-    async findOne(@Param('id') id: number): Promise<PostEntity> {
-        // find the post with this id
-        const post = await this.postService.findOne(id);
-
-        // if the post doesn't exit in the db, throw a 404 error
-        if (!post) {
-            throw new NotFoundException('This Post doesn\'t exist');
-        }
-
-        // if post exist, return the post
-        return post;
+        return await this.postService.findAllPosts();
     }
 
     @Post()
     async create(@Body() post: PostDto, @Request() req): Promise<PostEntity> {
         // create a new post and return the newly created post
-        console.log(post);
-        return await this.postService.create(post);
+        return await this.postService.createPost(post);
     }
 
 
-    @Put(':id')
-    async update(@Param('id') id: number, @Body() post: PostDto, @Request() req): Promise<PostEntity> {
-        // get the number of row affected and the updated post
-        const { numberOfAffectedRows, updatedPost } = await this.postService.update(id, post);
+    @Put('/like/:id')
+    async likePost(@Param('id') id: number): Promise<PostEntity> {
+        const  incrementResult = await this.postService.likePost(id);
 
-        // if the number of row affected is zero, 
-        // it means the post doesn't exist in our db
-        if (numberOfAffectedRows === 0) {
-            throw new NotFoundException('This Post doesn\'t exist');
-        }
+        // return the increment Result
+        return incrementResult;
+    }
 
-        // return the updated post
-        return updatedPost;
+    @Put('/dislike/:id')
+    async dislikePost(@Param('id') id: number): Promise<PostEntity> {
+        const  incrementResult = await this.postService.dislikePost(id);
+
+        // return the increment Result
+        return incrementResult;
     }
 
     @Delete(':id')
     async remove(@Param('id') id: number, @Request() req) {
         // delete the post with this id
-        const deleted = await this.postService.delete(id);
+        const deleted = await this.postService.deletePost(id);
 
         // if the number of row affected is zero, 
         // then the post doesn't exist in our db
@@ -62,6 +48,6 @@ export class PostsController {
         }
 
         // return success message
-        return 'Successfully deleted';
+        return deleted;
     }
 }

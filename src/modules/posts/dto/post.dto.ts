@@ -8,4 +8,6 @@ export class PostDto {
     @IsNotEmpty()
     readonly body: string;
     readonly image_url: string;
+
+    imageBase64: string;
 }
