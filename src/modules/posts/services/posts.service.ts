@@ -44,7 +44,12 @@ export class PostsService {
 
     async deletePost(id) {
         const deletedResult = await this.postRepository.destroy({ where: { id } });
-        fs.unlinkSync('./images/' + id + '.jpg');
+        try{
+            fs.unlinkSync('./images/' + id + '.jpg');
+        }catch(err){
+            console.log(err);
+        }
+        
         return deletedResult;
     }
 
