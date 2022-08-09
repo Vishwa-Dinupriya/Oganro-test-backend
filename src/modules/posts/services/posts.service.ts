@@ -23,7 +23,7 @@ export class PostsService {
         };
         let savedPost;
         try {
-             savedPost =  await this.postRepository_.save(<Post>post_);  
+             savedPost =  await this.postRepository.create(<Post>post_);  
              fs.writeFileSync('./images/' + savedPost.id + '.jpg', imageBase64.replace('data:image/jpeg;base64,', ''), {encoding: 'base64'});
 
         } catch (error) {
@@ -33,7 +33,9 @@ export class PostsService {
     }
 
     async findAllPosts(): Promise<Post[]> {
-        return await this.postRepository.findAll();
+        return await this.postRepository.findAll({
+            order:[['id', 'DESC']]
+        });
     }
 
     async findPost(id): Promise<Post> {

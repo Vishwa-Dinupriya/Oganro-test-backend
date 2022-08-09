@@ -13,9 +13,9 @@ export class BaseRepository<T extends sequelize.Model> implements IRepository<T>
     
     async save(model: T, transaction: Transaction = null): Promise<T> {
         try {
-            const savedDoc = await this.Model.create(model, { transaction });
+            // const savedDoc = await this.Model.create(model, { transaction });
 
-            return savedDoc;
+            return;
         } catch (ex: any) {
             throw ex;
         }
